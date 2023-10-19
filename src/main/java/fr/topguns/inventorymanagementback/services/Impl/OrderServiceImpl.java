@@ -32,20 +32,16 @@ public class OrderServiceImpl implements IOrderService {
     }
     @Override
     public List<Order>  getOrdersByIdUser(Long idUser) {
-
         return orderRepository.findByIdUser(idUser);
     }
 
     @Override
     public Order createOrder(Order order){
-
         return orderRepository.save(order);
     }
 
     @Override
     public Order updateOrder(Order order) {
-        LocalDateTime date = LocalDateTime.now();
-        order.setCreateDate(date);
         return orderRepository.save(order);
     }
 
@@ -53,9 +49,8 @@ public class OrderServiceImpl implements IOrderService {
     public Boolean deleteOrder(Long orderId) {
         //Todo : Tomorrow morning
         try{
-            LocalDateTime date = LocalDateTime.now();
             Order order = orderRepository.findById(orderId).orElseThrow();
-            order.setStatus(true);
+            order.setStatus(false);
             orderRepository.save(order);
             return true;
         }catch(NoSuchElementException e){
