@@ -31,14 +31,16 @@ public class CustomerServiceImpl implements ICustomerService {
                 .orElseThrow(() -> new EntityNotFoundException("L'entité n'a pas été trouvée pour l'ID : " + id));
     }
 
+
     @Override
     public Customer getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
+
     @Override
     public Customer getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email).orElseThrow();
     }
 
   /*  @Override
@@ -81,7 +83,6 @@ public class CustomerServiceImpl implements ICustomerService {
             LocalDateTime date = LocalDateTime.now();
             Customer user = userRepository.findById(userId).orElseThrow();
             user.setIsActive(0);
-            user.setUsername(user.getUsername() + "_deleted_" + date);
             user.setEmail(user.getEmail() + "_deleted_" + date);
             userRepository.save(user);
             return true;

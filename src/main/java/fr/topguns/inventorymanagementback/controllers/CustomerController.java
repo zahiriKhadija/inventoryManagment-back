@@ -69,9 +69,11 @@ public class CustomerController {
         return customerMapper.toDto(customerService.updateUser(customerEntity));
     }
 
-    @DeleteMapping("/remove")
+    @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteUser(@RequestParam(name = "id") Long id){
+    public String deleteUser(@PathVariable("id") Long id){
         return customerService.deleteUser(id)? "User successfully deleted":"Error in deletion";
     }
+
+
 }

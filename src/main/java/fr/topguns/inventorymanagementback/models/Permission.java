@@ -2,6 +2,9 @@ package fr.topguns.inventorymanagementback.models;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public enum Permission {
@@ -15,5 +18,13 @@ public enum Permission {
     CLIENT_DELETE("client:delete");
 
     @Getter
-    private final String permission;
+    private final String permissions;
+
+    /*
+    public List<SimpleGrantedAuthority> getAuthorities(){
+        getPermissions().stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.name()))
+                .toList();
+    }
+     */
 }

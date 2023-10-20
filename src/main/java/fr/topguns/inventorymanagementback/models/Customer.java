@@ -25,11 +25,20 @@ public class Customer implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(length = 50,nullable = false)
+    private String firstname;
+    @Column(length = 80,nullable = false)
+    private String lastname;
+    @Column(length = 80)
     private String username;
     @Column(length = 80,nullable = false)
     private String email;
     @Column(length = 14,nullable = false)
     private String password;
+    @Column(length = 80,nullable = false)
+    private String phone;
+    @Column(length = 200,nullable = false)
+    private String adress;
+
     @Column
     private LocalDateTime createDate;
     @Column
@@ -42,10 +51,14 @@ public class Customer implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     @Override
