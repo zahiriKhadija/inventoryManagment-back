@@ -1,6 +1,7 @@
 package fr.topguns.inventorymanagementback.services.Impl;
 
 import fr.topguns.inventorymanagementback.models.Order;
+import fr.topguns.inventorymanagementback.models.Status;
 import fr.topguns.inventorymanagementback.repositories.OrderRepository;
 import fr.topguns.inventorymanagementback.services.IOrderService;
 import jakarta.persistence.EntityNotFoundException;
@@ -50,7 +51,7 @@ public class OrderServiceImpl implements IOrderService {
         //Todo : Tomorrow morning
         try{
             Order order = orderRepository.findById(orderId).orElseThrow();
-            order.setStatus(false);
+            order.setStatus(Status.REJECT);
             orderRepository.save(order);
             return true;
         }catch(NoSuchElementException e){

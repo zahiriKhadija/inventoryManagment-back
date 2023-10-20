@@ -3,6 +3,7 @@ package fr.topguns.inventorymanagementback.controllers;
 import fr.topguns.inventorymanagementback.Mapper.OrderMapper;
 import fr.topguns.inventorymanagementback.dto.OrderDto;
 import fr.topguns.inventorymanagementback.models.Order;
+import fr.topguns.inventorymanagementback.models.Status;
 import fr.topguns.inventorymanagementback.services.IOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public List<OrderDto> getAllOrders() {
         return  orderService.getAllOrders().stream()
-                .filter(Order::isStatus)
+                //.filter(order -> order.getStatus().equals(Status.PENDING))
                 .sorted(Comparator.comparingLong(Order::getIdOrder))
                 .map(orderMapper::toDto)
                 .collect(Collectors.toList());
@@ -45,7 +46,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public List<OrderDto> getOrdersByIdUser(@RequestParam(name = "idUser") Long idUser){
         return  orderService.getOrdersByIdUser(idUser).stream()
-                .filter(Order::isStatus)
+               // .filter(order -> order.getStatus().equals(Status.PENDING))
                 .sorted(Comparator.comparingLong(Order::getIdOrder))
                 .map(orderMapper::toDto)
                 .collect(Collectors.toList());
@@ -66,9 +67,9 @@ public class OrderController {
     }
 
 
-    @DeleteMapping("/deleteOrder")
+    @DeleteMapping("/deleteOrder/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteOrder(@RequestParam(name = "id") Long id){
+    public String deleteOrder(@PathVariable("id") Long id){
         return orderService.deleteOrder(id)? "Order successfully deleted":"Error in deletion";
     }
 }

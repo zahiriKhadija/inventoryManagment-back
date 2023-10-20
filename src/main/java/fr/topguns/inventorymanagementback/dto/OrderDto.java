@@ -1,5 +1,6 @@
 package fr.topguns.inventorymanagementback.dto;
 
+import fr.topguns.inventorymanagementback.models.Status;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,10 @@ public class OrderDto {
     private String username;
     private Double total;
     private LocalDateTime createDate;
-    private boolean status;
+    private Status status;
+    private String mobile;
+    private String adresse;
+    private String ville;
+    private String codePostal;
     private List<OrderDetailsDto> orderDetails;
 }

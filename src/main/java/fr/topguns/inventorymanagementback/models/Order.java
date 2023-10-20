@@ -26,9 +26,13 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime createDate;
     @Column(nullable = false)
-    private boolean status;
+    private Status status;
     @Column(nullable = false)
     private Double total;
+    private String mobile;
+    private String adresse;
+    private String ville;
+    private String codePostal;
     @OneToMany(cascade = CascadeType.ALL)
     private List<OrderDetails> orderDetails;
 }
