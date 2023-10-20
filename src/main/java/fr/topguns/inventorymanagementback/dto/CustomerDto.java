@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,4 +22,6 @@ public class CustomerDto {
     private LocalDateTime editDate;
     private int isAdmin;
     private int isActive;
+
+    private List<RoleDto> roles;
 }
