@@ -1,6 +1,7 @@
 package fr.topguns.inventorymanagementback.controllers;
 
 import fr.topguns.inventorymanagementback.Mapper.OrderMapper;
+import fr.topguns.inventorymanagementback.config.Pagination;
 import fr.topguns.inventorymanagementback.dto.OrderDto;
 import fr.topguns.inventorymanagementback.models.Order;
 import fr.topguns.inventorymanagementback.models.Status;
@@ -8,6 +9,9 @@ import fr.topguns.inventorymanagementback.services.IOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +32,13 @@ public class OrderController {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderDto> getAllOrders() {
-        return  orderService.getAllOrders().stream()
-                //.filter(order -> order.getStatus().equals(Status.PENDING))
-                .sorted(Comparator.comparingLong(Order::getIdOrder))
+    public Page<OrderDto> getAllOrders(Pagination pagination) {
+        Page<Order> orderPage = orderService.getAllOrders(pagination);
+        List<OrderDto> orderDtos = orderPage.getContent().stream()
                 .map(orderMapper::toDto)
                 .collect(Collectors.toList());
+
+        return new PageImpl<>(orderDtos, PageRequest.of(pagination.getPage(), pagination.getSize()), orderPage.getTotalElements());
     }
 
     @GetMapping("/byId")
@@ -44,12 +49,13 @@ public class OrderController {
 
     @GetMapping("/byIdUser")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderDto> getOrdersByIdUser(@RequestParam(name = "idUser") Long idUser){
-        return  orderService.getOrdersByIdUser(idUser).stream()
-               // .filter(order -> order.getStatus().equals(Status.PENDING))
-                .sorted(Comparator.comparingLong(Order::getIdOrder))
+    public Page<OrderDto> getOrdersByIdUser(@RequestParam(name = "idUser") Long idUser, @RequestBody Pagination pagination){
+        Page<Order> orderPage = orderService.getOrdersByIdUser(idUser, pagination);
+        List<OrderDto> orderDtos = orderPage.getContent().stream()
                 .map(orderMapper::toDto)
                 .collect(Collectors.toList());
+
+        return new PageImpl<>(orderDtos, PageRequest.of(pagination.getPage(), pagination.getSize()), orderPage.getTotalElements());
     }
     @PostMapping("/createOrder")
     @ResponseStatus(HttpStatus.CREATED)
