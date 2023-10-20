@@ -1,5 +1,6 @@
 package fr.topguns.inventorymanagementback.services.Impl;
 
+import fr.topguns.inventorymanagementback.config.Pagination;
 import fr.topguns.inventorymanagementback.models.Order;
 import fr.topguns.inventorymanagementback.models.Status;
 import fr.topguns.inventorymanagementback.repositories.OrderRepository;
@@ -7,6 +8,9 @@ import fr.topguns.inventorymanagementback.services.IOrderService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,9 +25,10 @@ public class OrderServiceImpl implements IOrderService {
     private OrderRepository orderRepository;
 
     @Override
-    public List<Order> getAllOrders() {
-        List<Order> list = orderRepository.findAll();
-        return list ;
+    public Page<Order> getAllOrders(Pagination pagination) {
+        Pageable pageable = PageRequest.of(pagination.getPage(), pagination.getSize());
+        return orderRepository.findAll(pageable);
+
     }
 
     @Override
@@ -32,8 +37,9 @@ public class OrderServiceImpl implements IOrderService {
                 .orElseThrow(() -> new EntityNotFoundException("L'entité n'a pas été trouvée pour l'ID : " + id));
     }
     @Override
-    public List<Order>  getOrdersByIdUser(Long idUser) {
-        return orderRepository.findByIdUser(idUser);
+    public Page<Order>  getOrdersByIdUser(Long idUser,Pagination pagination) {
+        Pageable pageable = PageRequest.of(pagination.getPage(), pagination.getSize());
+        return orderRepository.findByIdUser(idUser,pageable);
     }
 
     @Override
