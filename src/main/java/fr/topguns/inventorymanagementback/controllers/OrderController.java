@@ -3,6 +3,7 @@ package fr.topguns.inventorymanagementback.controllers;
 import fr.topguns.inventorymanagementback.Mapper.OrderMapper;
 import fr.topguns.inventorymanagementback.dto.OrderDto;
 import fr.topguns.inventorymanagementback.models.Order;
+import fr.topguns.inventorymanagementback.models.Status;
 import fr.topguns.inventorymanagementback.services.IOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/orders")
 @RequiredArgsConstructor
 @Slf4j
 public class OrderController {
@@ -29,7 +30,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public List<OrderDto> getAllOrders() {
         return  orderService.getAllOrders().stream()
-                .filter(order -> (!order.isStatus()))
+                //.filter(order -> order.getStatus().equals(Status.PENDING))
                 .sorted(Comparator.comparingLong(Order::getIdOrder))
                 .map(orderMapper::toDto)
                 .collect(Collectors.toList());
@@ -45,12 +46,12 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public List<OrderDto> getOrdersByIdUser(@RequestParam(name = "idUser") Long idUser){
         return  orderService.getOrdersByIdUser(idUser).stream()
-                .filter(order -> (!order.isStatus()))
+               // .filter(order -> order.getStatus().equals(Status.PENDING))
                 .sorted(Comparator.comparingLong(Order::getIdOrder))
                 .map(orderMapper::toDto)
                 .collect(Collectors.toList());
     }
-    @PostMapping("/create")
+    @PostMapping("/createOrder")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDto createOrder(@RequestBody OrderDto order){
         Order orderEntity = orderMapper.fromDto(order);
@@ -58,7 +59,7 @@ public class OrderController {
         return orderMapper.toDto(orderCreated);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/updateOrder")
     @ResponseStatus(HttpStatus.OK)
     public OrderDto updateOrder(@RequestBody OrderDto order){
         Order orderEntity = orderMapper.fromDto(order);
@@ -66,9 +67,9 @@ public class OrderController {
     }
 
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/deleteOrder/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteOrder(@RequestParam(name = "id") Long id){
+    public String deleteOrder(@PathVariable("id") Long id){
         return orderService.deleteOrder(id)? "Order successfully deleted":"Error in deletion";
     }
 }
